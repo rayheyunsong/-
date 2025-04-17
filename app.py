@@ -3,6 +3,13 @@ asyncio.set_event_loop(asyncio.new_event_loop())   # 给 ScriptRunner 线程建 
 nest_asyncio.apply()                               # 允许嵌套事件循环  (ib_insync 需要)
 
 import streamlit as st
+try:
+    from quant_platform.broker.ibkr_broker import IBKRBroker
+except ModuleNotFoundError:
+    IBKRBroker = None      # Cloud 环境没有此模块也能运行
+
+if IBKRBroker is None:
+    st.warning("IBKR functions unavailable in this build.")
 from quant_platform.broker.ibkr_broker import IBKRBroker
 import inspect
 def render_param_inputs(strategy_cls):
